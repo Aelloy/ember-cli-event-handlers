@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { run, getOwner } = Ember;
+const { run } = Ember;
 import { moduleForComponent, test } from 'ember-qunit';
 import { handle, handleManual, EventHandlersMixin } from 'ember-cli-event-handlers';
 import hbs from 'htmlbars-inline-precompile';
@@ -47,7 +47,7 @@ test('it renders and handles events properly', function(assert) {
   run(() => $(window).trigger('resize'));
   assert.equal(this.get('timesResized'), 1, "callback detached and counter doesn't change");
   
-  getOwner(this).unregister('component:my-component');
+  // getOwner(this).unregister('component:my-component'); Breaks Ember 1.13 check for ember-try
 });
 
 test('component with manual handler', function(assert) {
@@ -89,5 +89,5 @@ test('component with manual handler', function(assert) {
   run(() => this.$('.button').trigger('click'));
   assert.equal(this.get('count'), 1, "handler is off again");
   
-  getOwner(this).unregister('component:my-component');
+  // getOwner(this).unregister('component:my-component');
 });
