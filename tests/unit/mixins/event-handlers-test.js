@@ -1,36 +1,51 @@
 import Ember from 'ember';
 const { run } = Ember;
-import EventHandlersMixin from 'ember-cli-event-handlers/mixins/event-handlers';
-import handle from 'ember-cli-event-handlers/handle';
+import { handle, EventHandlersMixin } from 'ember-cli-event-handlers';
+import HandlerProperty from 'ember-cli-event-handlers/handler-property';
 import { module, test } from 'qunit';
 
 module('Unit | Mixin');
 
+var noop = function() {};
+
 test('event handlers hooked up and hooked off', function(assert) {
   assert.expect(4);
-
-  var callback = function() {};
-  var mixinStub = Ember.Mixin.create(EventHandlersMixin, {
-    _getSelector() {
-      return {
-        on(event, func) {
-          assert.equal(event, 'resize', "Event passed on didInsert");
-          assert.equal(typeof func, 'function', "Function passed on didInsert");
-        },
-        off(event, func) {
-          assert.equal(event, 'resize', "Event passed on willDestroy");
-          assert.equal(typeof func, 'function', "Function passed on willDestroy");
-        }
-      };
-    }    
-  });
   
-  let Component = Ember.Component.extend(mixinStub, {
-    some_prop: handle('resize', callback)
+  let Component = Ember.Component.extend(EventHandlersMixin, {
+    prop: handle('resize', noop)
   });
 
   let subject = Component.create();
+  
+  assert.ok(subject.prop instanceof HandlerProperty, "HandlerProperty created on component initialization");
+  
+  subject.prop.getSelector = function() {
+    var handler = this;
+    return {
+      on() {
+        assert.equal(handler.event, 'resize', "Event passed on didInsert");
+      },
+      off() {
+        assert.equal(handler.event, 'resize', "Event passed on willDestroy");
+      }
+    };
+  };
 
   run(() => subject.trigger('didInsertElement'));
   run(() => subject.trigger('willDestroyElement'));
+  assert.deepEqual(subject, subject.prop.component, "Component instance bound");
+});
+
+test('two instances of the same Component have isolated handlers', function(assert) {
+  assert.expect(2);
+  
+  let Component = Ember.Component.extend(EventHandlersMixin, {
+    prop: handle('event', noop)
+  });
+  
+  let first = Component.create();
+  let second = Component.create();
+
+  assert.deepEqual(first, first.prop.component, "First Component instance bound");
+  assert.deepEqual(second, second.prop.component, "Second Component instance bound");
 });

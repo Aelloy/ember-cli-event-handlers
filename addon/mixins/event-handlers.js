@@ -1,29 +1,27 @@
 import Ember from 'ember';
 import HandlerProperty from '../handler-property';
+import HandlerConfig from '../handler-config';
 
 export default Ember.Mixin.create({
 
-  _getSelector(handler) {
-    return handler.global() ? Ember.$(window) : this.$();
-  },
-  
   _bindCallbacks(handler) {
     this.on('didInsertElement', function(){
-      this._getSelector(handler).on(...handler.callbackParams());
-    }.bind(this));
+      handler.on();
+    });
     
     this.on('willDestroyElement', function(){
-      this._getSelector(handler).off(...handler.callbackParams());
-    }.bind(this));    
+      handler.off();
+    });    
   },
 
   init() {
     this._super(...arguments);
-    for (var prop in this) {
-      if (this[prop] instanceof HandlerProperty) {
-        var handler = this[prop];
-        handler.initCallback(this);
-        this._bindCallbacks(handler);
+    for (var handler in this) {
+      if (this[handler] instanceof HandlerConfig) {
+        this[handler] = new HandlerProperty(this[handler], this);
+        if (this[handler].auto) {
+          this._bindCallbacks(this[handler]);
+        }
       }
     }
   }

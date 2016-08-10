@@ -1,54 +1,52 @@
 import Ember from 'ember';
 import HandlerProperty from 'ember-cli-event-handlers/handler-property';
+import { handle } from 'ember-cli-event-handlers';
 import { module, test } from 'qunit';
 
 module('Unit | HandlerProperty');
 
-test('configuration', function(assert) {
-  assert.throws(
-    () => new HandlerProperty(),
-    /Expects 2 or 3 arguments/,
-    'Expect an error when not enough args provided'
-  );
+var noop = function(){};
 
-  assert.throws(
-    () => new HandlerProperty('resize', 'other bullshit'),
-    /Last argument must be a callback/,
-    'Expect an error when last argument is not a function'
-  );
+test('properly scopes callback', function(assert) {
+  assert.expect(2);
   
-  assert.throws(
-    () => new HandlerProperty('resize', window, function() {}),
-    /Element argument must be a string or undefined/,
-    'Expect an error when optional element argument is not a string'
-  );
-
-  assert.ok(new HandlerProperty('resize', function() {}) instanceof HandlerProperty, "Property is an instanceof HandlerProperty");
-});
-
-test('callback initialization', function(assert) {
-  var obj = Ember.Object.create({
-    counter: 0,
-    prop: new HandlerProperty('event', function(){
-      this.incrementProperty('counter');
-    })
-  });
-  obj.prop.initCallback(obj);
+  var obj = Ember.Object.create({counter: 0});
+  var conf = handle('event', function() { this.incrementProperty('counter'); });
+  var prop = new HandlerProperty(conf, obj);
   
-  obj.prop.callback();
+  prop.callback();
   assert.equal(obj.counter, 1, "callback worked");
   
   obj.set('isDestroying', true);
-  obj.prop.callback();
+  prop.callback();
   assert.equal(obj.counter, 1, "callback didn't work, cause component is destroying");
 });
 
-test('callbackParams generation and global detection', function(assert) {
-  var prop = new HandlerProperty('event', function(){});
+test('callbackParams generation', function(assert) {
+  assert.expect(2);
+  
+  var prop = new HandlerProperty(handle('event', noop));
   assert.equal(prop.callbackParams().length, 2, "put two params into array");
-  assert.ok(prop.global(), "it's attached to window when no element selector passed");
 
-  prop = new HandlerProperty('.button', 'event', function(){});
+  prop = new HandlerProperty(handle('event', '.button', noop));
   assert.equal(prop.callbackParams().length, 3, "put three params into array");
-  assert.notOk(prop.global(), "it's attached to internal element when selector passed");
+});
+
+test('on/off methods', function(assert) {
+  assert.expect(4);
+  var prop = new HandlerProperty(handle('event', noop));
+  prop.getSelector = function() {
+    return {
+      on(event, cb) {
+        assert.equal(event, 'event', "event passed on 'on'");
+        assert.equal(cb, prop.callback, "callback passed on 'on'");
+      },
+      off(event, cb) {
+        assert.equal(event, 'event', "event passed on 'off'");
+        assert.equal(cb, prop.callback, "callback passed on 'off'");
+      }
+    };
+  };
+  prop.on();
+  prop.off();
 });

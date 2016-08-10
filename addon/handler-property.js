@@ -1,37 +1,50 @@
 import Ember from 'ember';
-const { assert, isPresent } = Ember;
+const { isPresent } = Ember;
 
-export default function HandlerProperty() {
-  var args = [...arguments];
-  assert("Expects 2 or 3 arguments: event, selector (optional) and callback", args.length > 1 && args.length < 4);
-
-  this.func = args.pop();
-  assert("Last argument must be a callback function", typeof this.func === 'function');
+export default class HandlerProperty {
   
-  this.event = args.shift();
-  assert("Event argument must be a string", typeof this.event === 'string');
-  
-  this.element = args.pop();
-  assert("Element argument must be a string or undefined", ['string', 'undefined'].includes(typeof this.element));
-}
+  constructor(config, component) {
+    this.event      = config.event;
+    this.root       = config.root;
+    this.selector   = config.selector;      
+    this.auto       = config.auto;
+    this.component  = component;
+    this.handling   = false;
 
-HandlerProperty.prototype.initCallback = function(that) {
-  var func = this.func;
-  this.callback = function(){
-    if (!this.get('isDestroying') && !this.get('isDestroyed')) {
-      func.call(this, ...arguments);
-    }
-  }.bind(that);
-};
-
-HandlerProperty.prototype.callbackParams = function() {
-  if (isPresent(this.element)) {
-    return [this.event, this.element, this.callback];
-  } else {
-    return [this.event, this.callback];
+    let func      = config.func;
+    this.callback = function() {
+      if (!this.get('isDestroying') && !this.get('isDestroyed')) {
+        func.call(this, ...arguments);
+      }
+    }.bind(component);
   }
-};
 
-HandlerProperty.prototype.global = function() {
-  return !isPresent(this.element);
-};
+  callbackParams() {
+    if (isPresent(this.selector)) {
+      return [this.event, this.selector, this.callback];
+    } else {
+      return [this.event, this.callback];
+    }
+  }
+  
+  getSelector() {
+    switch (this.root) {
+    case 'window':
+      return Ember.$(window);
+    case 'body':
+      return Ember.$('body');
+    default:
+      return this.component.$();
+    }
+  }
+  
+  on() {
+    this.handling = true;
+    this.getSelector().on(...this.callbackParams());
+  }
+  
+  off() {
+    this.getSelector().off(...this.callbackParams());    
+    this.handling = false;
+  }
+}

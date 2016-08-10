@@ -1,14 +1,22 @@
 import Ember from 'ember';
-import { handle } from 'ember-cli-event-handlers';
+import { handle, handleManual } from 'ember-cli-event-handlers';
 
 export default Ember.Component.extend({
   classNames: ['dummy-component'],
 
-  window_prop: handle('resize', function() {
+  onResize: handle('resize', 'window', function() {
     this.incrementProperty('resized');
   }),
-  
-  internal_prop: handle('click', '.button', function() {
+
+  onClick: handleManual('click', '.button', function() {
     this.incrementProperty('clicked');
+  }),
+  
+  toggleHandling: Ember.observer('handling', function() {
+    if (this.onClick.handling) {
+      this.onClick.off();
+    } else {
+      this.onClick.on();
+    }
   })
 });

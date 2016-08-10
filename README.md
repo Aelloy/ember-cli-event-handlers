@@ -76,7 +76,7 @@ Let's assume you've attached the handler to the `handlerProp` property of your c
 
 `this.handlerProp.on()` to activate this handler again.
 
-Also, when defining your handler, you can use `handleManual` descriptor instead of `handle`. The handlers defined this way will be active only after being enabled with `.on()`. Example:
+Also, when defining your handler, you can use `handleManual` descriptor instead of `handle`. The handlers defined this way will be active only after being enabled with `.on()`. Use `handling` property of handler to find out if it's `on` or `off` right now. Example:
 
 ```js
 import { handle, EventHandlersMixin } from 'ember-cli-event-handlers';
