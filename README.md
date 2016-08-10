@@ -1,4 +1,4 @@
-# Ember-cli-event-properties
+# ember-cli-event-handlers
 
 This tiny addon introduces syntactic sugar for handling external (jquery) events in components.
 
