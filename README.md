@@ -1,5 +1,7 @@
 # ember-cli-event-handlers
 
+[![Build Status](https://travis-ci.org/AutoCloud/ember-cli-event-handlers.svg?branch=master)](https://travis-ci.org/AutoCloud/ember-cli-event-handlers)
+
 This tiny addon introduces a syntactic sugar for handling external (jquery) events in components.
 
 You can create a handler using provided computed-property-like dsl and it will be attached to selected element on `didInsertElement` and will detached on `willDestroyElement`. As long as Ember destroys element after destroying component, your handler will stop reacting once component becomes unavailable. It's done by monitoring `isDestroying`/`isDestroyed` properties of the component.
