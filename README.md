@@ -32,7 +32,7 @@ export default Ember.Component.extend({
   
   // By supplying an optional selector you can attach handler
   // to the element inside of component template
-  internal_prop: handle('scroll', '.button', function(event) {
+  internal_prop: handle('scroll', '.chat-container', function(event) {
     this.scrolled(event);
   })
 });
