@@ -1,6 +1,7 @@
 # ember-cli-event-handlers
 
 [![Build Status](https://travis-ci.org/AutoCloud/ember-cli-event-handlers.svg?branch=master)](https://travis-ci.org/AutoCloud/ember-cli-event-handlers)
+[![Ember Observer Score](https://emberobserver.com/badges/ember-cli-event-handlers.svg)](https://emberobserver.com/addons/ember-cli-event-handlers)
 
 This tiny addon introduces a syntactic sugar for handling external ([jQuery](http://jquery.com/)) events in components.
 
