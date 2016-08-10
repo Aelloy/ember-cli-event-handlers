@@ -1,26 +1,47 @@
 # Ember-cli-event-properties
 
-This README outlines the details of collaborating on this Ember addon.
+This tiny addon introduces syntactic sugar for handling external (jquery) events in components.
 
-## Installation
+You can create handler as a property of component, using provided computed-property-like dsl, and it will be attached to selected element on `didInsertElement` and will detached on `willDestroyElement`. As long as Ember destroys element after destroying component, your handler stop reacting, once component is unavailable. It's done by monitoring `isDestroying`/`isDestroyed` properties of component.
 
-* `git clone` this repository
-* `npm install`
-* `bower install`
+## Configuration
 
-## Running
+By default mixin will be attached to every component, use configuration options to opt out in favor of manual use of mixin:
 
-* `ember server`
-* Visit your app at http://localhost:4200.
+```js
+// in /config/environment.js
+    "ember-cli-event-handlers": {
+      autoApply: false  
+    }
+```
 
-## Running Tests
+## Usage
 
-* `npm test` (Runs `ember try:testall` to test your addon against multiple Ember versions)
-* `ember test`
-* `ember test --server`
+If you use `autoApply` mode:
+```js
+import { handle } from 'ember-cli-event-handlers';
 
-## Building
+export default Ember.Component.extend({
+  
+  // This will be attached to window object
+  window_prop: handle('resize', function(event) {
+    this.doSomeCoolStuffOnResize(event);
+  }),
+  
+  // Or you want to supply optional selector to attach handler
+  // on element inside of component
+  internal_prop: handle('scroll', '.button', function(event) {
+    this.scrolled(event);
+  })
+});
+```
 
-* `ember build`
+Using mixin manually is easy:
+```js
+import { handle, EventHandlersMixin } from 'ember-cli-event-handlers';
 
-For more information on using ember-cli, visit [http://ember-cli.com/](http://ember-cli.com/).
+export default Ember.Component.extend(EventHandlersMixin, {
+  
+  // Handler definitions will be the same
+});
+```

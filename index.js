@@ -2,5 +2,5 @@
 'use strict';
 
 module.exports = {
-  name: 'ember-cli-event-properties'
+  name: 'ember-cli-event-handlers'
 };

@@ -1,0 +1,6 @@
+<span class="clicked">{{clicked}}</span>
+<span class="resized">{{resized}}</span>
+<button {{action 'toggleShow'}} class="show">Toggle show!</button>
+{{#if show}}
+  {{dummy-component clicked=(mut clicked) resized=(mut resized)}}
+{{/if}}
