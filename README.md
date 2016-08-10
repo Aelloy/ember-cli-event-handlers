@@ -1,12 +1,12 @@
 # ember-cli-event-handlers
 
-This tiny addon introduces syntactic sugar for handling external (jquery) events in components.
+This tiny addon introduces a syntactic sugar for handling external (jquery) events in components.
 
-You can create handler as a property of component, using provided computed-property-like dsl, and it will be attached to selected element on `didInsertElement` and will detached on `willDestroyElement`. As long as Ember destroys element after destroying component, your handler stop reacting, once component is unavailable. It's done by monitoring `isDestroying`/`isDestroyed` properties of component.
+You can create a handler using provided computed-property-like dsl and it will be attached to selected element on `didInsertElement` and will detached on `willDestroyElement`. As long as Ember destroys element after destroying component, your handler will stop reacting once component becomes unavailable. It's done by monitoring `isDestroying`/`isDestroyed` properties of the component.
 
 ## Configuration
 
-By default mixin will be attached to every component, use configuration options to opt out in favor of manual use of mixin:
+By default the mixin will be attached to every component, use configuration options to opt out in favor of manual use of the mixin:
 
 ```js
 // in /config/environment.js
@@ -28,8 +28,8 @@ export default Ember.Component.extend({
     this.doSomeCoolStuffOnResize(event);
   }),
   
-  // Or you want to supply optional selector to attach handler
-  // on element inside of component
+  // By supplying an optional selector you can attach handler
+  // to the element inside of component template
   internal_prop: handle('scroll', '.button', function(event) {
     this.scrolled(event);
   })
