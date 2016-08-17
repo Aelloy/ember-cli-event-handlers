@@ -14,13 +14,13 @@ export default class HandlerConfig {
     assert("Event argument must be a string", typeof this.event === 'string');
 
     this.root = args.shift();
-    if (['component', 'body', 'window'].includes(this.root)) {
+    if (Ember.A(['component', 'body', 'window']).contains(this.root)) {
       this.selector = args.pop();      
     } else {
       this.selector = this.root;
       this.root = 'component';
     }
-    assert("Element argument must be a string or undefined", ['string', 'undefined'].includes(typeof this.selector));
+    assert("Element argument must be a string or undefined", Ember.A(['string', 'undefined']).contains(typeof this.selector));
     
     this.auto = true;   
   }
