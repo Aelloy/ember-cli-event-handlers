@@ -1,3 +1,7 @@
+# 0.0.3
+
+* Merged #1: removing devDependencies on shims
+
 # 0.0.2
 
 * Introducing `on()`/`off()` handler methods to manually turn it on and off
