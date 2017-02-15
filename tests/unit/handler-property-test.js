@@ -3,28 +3,30 @@ import HandlerProperty from 'ember-cli-event-handlers/handler-property';
 import { handle } from 'ember-cli-event-handlers';
 import { module, test } from 'qunit';
 
+const { run } = Ember;
+
 module('Unit | HandlerProperty');
 
 var noop = function(){};
 
 test('properly scopes callback', function(assert) {
   assert.expect(2);
-  
+
   var obj = Ember.Object.create({counter: 0});
   var conf = handle('event', function() { this.incrementProperty('counter'); });
   var prop = new HandlerProperty(conf, obj);
-  
+
   prop.callback();
   assert.equal(obj.counter, 1, "callback worked");
-  
-  obj.set('isDestroying', true);
+
+  run(() => obj.destroy());
   prop.callback();
   assert.equal(obj.counter, 1, "callback didn't work, cause component is destroying");
 });
 
 test('callbackParams generation', function(assert) {
   assert.expect(2);
-  
+
   var prop = new HandlerProperty(handle('event', noop));
   assert.equal(prop.callbackParams().length, 2, "put two params into array");
 
