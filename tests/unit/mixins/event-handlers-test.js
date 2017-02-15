@@ -6,6 +6,9 @@ import { module, test } from 'qunit';
 
 module('Unit | Mixin');
 
+var fakeRenderer = {
+  componentInitAttrs: function() {}
+};
 var noop = function() {};
 
 test('event handlers hooked up and hooked off', function(assert) {
@@ -15,7 +18,7 @@ test('event handlers hooked up and hooked off', function(assert) {
     prop: handle('resize', noop)
   });
 
-  let subject = Component.create({ renderer: {} });
+  let subject = Component.create({ renderer: fakeRenderer });
 
   assert.ok(subject.prop instanceof HandlerProperty, "HandlerProperty created on component initialization");
 
@@ -43,8 +46,8 @@ test('two instances of the same Component have isolated handlers', function(asse
     prop: handle('event', noop)
   });
 
-  let first = Component.create({ renderer: {} });
-  let second = Component.create({ renderer: {} });
+  let first = Component.create({ renderer: fakeRenderer });
+  let second = Component.create({ renderer: fakeRenderer });
 
   assert.deepEqual(first, first.prop.component, "First Component instance bound");
   assert.deepEqual(second, second.prop.component, "Second Component instance bound");
