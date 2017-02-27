@@ -49,6 +49,7 @@
     "events"
   ],
   "dependencies": {
+    "ember-runtime-enumerable-includes-polyfill": "^1.0.4",
     "ember-cli-babel": "^5.1.7"
   },
   "ember-addon": {
