@@ -8,7 +8,7 @@ var noop = function() {};
 
 test('creates auto conf with minimal params', function(assert) {
   assert.expect(3);
-  
+
   var config = handle('event', noop);
   assert.ok(config instanceof HandlerConfig, "Creates instance of HandlerConfig");
   assert.equal(config.root, 'component', "Sets component as default root");
@@ -17,7 +17,7 @@ test('creates auto conf with minimal params', function(assert) {
 
 test('creates auto conf with optional selector', function(assert) {
   assert.expect(2);
-  
+
   var config = handle('event', '.button', noop);
   assert.equal(config.root, 'component', "Sets component as default root");
   assert.equal(config.selector, '.button', "Sets .button as selector");
@@ -25,7 +25,7 @@ test('creates auto conf with optional selector', function(assert) {
 
 test('creates auto conf with optional root', function(assert) {
   assert.expect(2);
-  
+
   var config = handle('event', 'body', noop);
   assert.equal(config.root, 'body', "Sets body as a root");
   assert.notOk(config.selector, "Selection sets undefined");
@@ -33,7 +33,7 @@ test('creates auto conf with optional root', function(assert) {
 
 test('creates auto conf with full set of params', function(assert) {
   assert.expect(2);
-  
+
   var config = handle('event', 'body', '.button', noop);
   assert.equal(config.root, 'body', "Sets body as a root");
   assert.equal(config.selector, '.button', "Sets .button as a selector");
@@ -41,12 +41,18 @@ test('creates auto conf with full set of params', function(assert) {
 
 test('creates auto conf with nonesense params', function(assert) {
   assert.expect(2);
-  
+
   var config = handle('event', '.button', 'body', noop);
   assert.equal(config.root, 'component', "Sets default root");
   assert.equal(config.selector, '.button', ".button is not a valid root, assumes it was a selector.");
 });
 
+test('recognizes document as root', function(assert) {
+  assert.expect(1);
+
+  var config = handle('event', 'document', noop);
+  assert.equal(config.root, 'document', "document is a root now");
+});
 
 test('create manual handler', function(assert) {
   assert.expect(1);

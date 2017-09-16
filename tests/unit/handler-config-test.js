@@ -5,7 +5,7 @@ module('Unit | HandlerConfig');
 
 test('configuration', function(assert) {
   assert.expect(4);
-  
+
   assert.throws(
     () => new HandlerConfig(),
     /Expects 2 to 4 arguments/,
@@ -17,7 +17,7 @@ test('configuration', function(assert) {
     /Last argument must be a callback/,
     'Expect an error when last argument is not a function'
   );
-  
+
   assert.throws(
     () => new HandlerConfig('resize', window, function() {}),
     /Element argument must be a string or undefined/,
@@ -29,7 +29,7 @@ test('configuration', function(assert) {
 
 test('create manual handler', function(assert) {
   assert.expect(1);
-  
+
   var config = new HandlerConfig('event', function(){});
   config.setManual();
   assert.notOk(config.auto, "is not automatic");

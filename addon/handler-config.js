@@ -14,7 +14,7 @@ export default class HandlerConfig {
     assert("Event argument must be a string", typeof this.event === 'string');
 
     this.root = args.shift();
-    if (Ember.A(['component', 'body', 'window']).includes(this.root)) {
+    if (Ember.A(['component', 'body', 'window', 'document']).includes(this.root)) {
       this.selector = args.pop();
     } else {
       this.selector = this.root;

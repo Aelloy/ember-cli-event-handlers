@@ -1,6 +1,19 @@
 <div class="counters">
-  <span class="clicked">{{clicked}}</span>
-  <span class="resized">{{resized}}</span>
+  <div>
+    Times clicked:
+    <span class="clicked">{{clicked}}</span>
+  </div>
+  <div>
+    Times resized:
+    <span class="resized">{{resized}}</span>
+  </div>
+  <div>
+    {{#if handling}}
+      Handling clicks!
+    {{else}}
+      Not handling clicks!
+    {{/if}}
+  </div>
 </div>
 <div class="controls">
   <button {{action 'toggleShow'}} class="show">Toggle show!</button>

@@ -1,3 +1,17 @@
+# 0.0.5
+
+* Added 'document' keyword as event target, useful for tracking `visibilitychange` event for example
+* Events that do not bubble up are now bound directly to the element, the list of such events:
+  * scroll
+  * focus/blur
+  * load/unload
+* Array polyfill has been removed. Ember <2.8 is not supported (but might work). Tested against official LTS releases/beta/canary.
+* Upgrade to Ember 2.15 along with plugin boilerplate
+
+# 0.0.4
+
+* Upgrade to Ember 2.11
+
 # 0.0.3
 
 * Merged #1: removing devDependencies on shims
