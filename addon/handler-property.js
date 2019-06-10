@@ -1,4 +1,4 @@
-import jQuery from 'jquery';
+import $ from 'jquery';
 import { isPresent } from '@ember/utils';
 const noBubbleEvents = ['scroll', 'focus', 'blur', 'load', 'unload'];
 
@@ -32,11 +32,11 @@ export default class HandlerProperty {
   getRoot() {
     switch (this.root) {
     case 'window':
-      return jQuery(window);
+      return $(window);
     case 'document':
-      return jQuery(document);
+      return $(document);
     case 'body':
-      return jQuery('body');
+      return $('body');
     default:
       return this.component.$();
     }

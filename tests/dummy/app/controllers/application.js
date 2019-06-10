@@ -1,4 +1,4 @@
-import jQuery from 'jquery';
+import $ from 'jquery';
 import Controller from '@ember/controller'
 
 export default Controller.extend({
@@ -14,7 +14,7 @@ export default Controller.extend({
       this.toggleProperty('handling');
     },
     triggerResize() {
-      jQuery(window).trigger('resize');
+      $(window).trigger('resize');
     }
   }
 });
