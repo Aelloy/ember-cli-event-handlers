@@ -1,6 +1,7 @@
-import Ember from 'ember';
+import jQuery from 'jquery';
+import Controller from '@ember/controller'
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   show: true,
   handling: false,
   clicked: 0,
@@ -13,7 +14,7 @@ export default Ember.Controller.extend({
       this.toggleProperty('handling');
     },
     triggerResize() {
-      Ember.$(window).trigger('resize');
+      jQuery(window).trigger('resize');
     }
   }
 });
