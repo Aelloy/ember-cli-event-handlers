@@ -9,42 +9,59 @@ moduleForComponent('my-component', 'Integration | Component | my component', {
 });
 
 test('it renders and handles events properly', function(assert) {
-  assert.expect(5);
+  assert.expect(8);
 
   this.set('timesResized', 0);
-  this.set('timesClicked', 0);
+  this.set('timesButtonClicked', 0);
   this.set('show', true);
 
   this.register('component:my-component', Ember.Component.extend(EventHandlersMixin, {
+    classNames: ['my-component'],
+
     resizer: handle('resize', 'window', function() {
       this.incrementProperty('timesResized');
     }),
 
-    clicker: handle('click', '.button', function() {
+    clicker: handle('click', function() {
       this.incrementProperty('timesClicked');
+    }),
+
+    buttonClicker: handle('click', '.button', function() {
+      this.incrementProperty('timesButtonClicked');
     })
   }));
 
   this.render(hbs`
     {{#if show}}
-      {{#my-component timesResized=(mut timesResized) timesClicked=(mut timesClicked)}}
+      {{#my-component timesResized=(mut timesResized) timesClicked=(mut timesClicked) timesButtonClicked=(mut timesButtonClicked)}}
         <button class='button'>Click me!</button>
       {{/my-component}}
     {{/if}}
   `);
 
-  assert.ok(this.$('button.button').length, 'renders button');
+  let component = document.querySelector('.my-component');
+  let button = document.querySelector('button.button');
 
-  run(() => this.$(window).trigger('resize'));
+  assert.ok(button, 'renders button');
+
+  let click_event = new Event('click', {bubbles: true});
+  let resize_event = new Event('resize');
+
+  run(() => window.dispatchEvent(resize_event));
   assert.equal(this.get('timesResized'), 1, "callback worked one time on resize");
 
-  run(() => this.$('.button').trigger('click'));
-  assert.equal(this.get('timesClicked'), 1, "callback worked one time on click");
+  run(() => button.dispatchEvent(click_event));
+  assert.equal(this.get('timesClicked'), 1, "component callback worked one time on button click");
+  assert.equal(this.get('timesButtonClicked'), 1, "button callback worked one time on button click");
+
+  run(() => component.dispatchEvent(click_event));
+  assert.equal(this.get('timesClicked'), 2, "component callback worked one time on component click");
+  assert.equal(this.get('timesButtonClicked'), 1, "button callback didn't work on component click");
 
   run(() => this.set('show', false));
-  assert.notOk(this.$('button.button').length, 'component disappears');
+  assert.notOk(document.querySelector('button.button'), 'component disappears');
 
-  run(() => this.$(window).trigger('resize'));
+  run(() => window.dispatchEvent(resize_event));
   assert.equal(this.get('timesResized'), 1, "callback detached and counter doesn't change");
 });
 
@@ -76,14 +93,17 @@ test('component with manual handler', function(assert) {
 
   assert.equal(this.get('count'), 0, "nothing happened yet");
 
-  run(() => this.$('.button').trigger('click'));
+  let button = document.querySelector('button.button');
+  let click_event = new Event('click', {bubbles: true});
+
+  run(() => button.dispatchEvent(click_event));
   assert.equal(this.get('count'), 0, "nope, handler is deaf this far");
 
   this.set('handling', true);
-  run(() => this.$('.button').trigger('click'));
+  run(() => button.dispatchEvent(click_event));
   assert.equal(this.get('count'), 1, "started counting, yay!");
 
   this.set('handling', false);
-  run(() => this.$('.button').trigger('click'));
+  run(() => button.dispatchEvent(click_event));
   assert.equal(this.get('count'), 1, "handler is off again");
 });

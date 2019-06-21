@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import { isPresent } from '@ember/utils';
 const noBubbleEvents = ['scroll', 'focus', 'blur', 'load', 'unload'];
 
@@ -14,37 +13,45 @@ export default class HandlerProperty {
     this.bubble     = !noBubbleEvents.includes(this.event);
 
     const func      = config.func;
-    this.callback = function() {
+    const selector  = config.selector;
+
+    const callback = function() {
       if (!this.get('isDestroying') && !this.get('isDestroyed')) {
         func.call(this, ...arguments);
       }
     }.bind(component);
+
+    if (isPresent(selector)) {
+      this.callback = function() {
+        const event = arguments[0];
+        const matchingChild = event.target.closest(selector);
+        if (matchingChild) callback(...arguments);
+      }
+    } else {
+      this.callback = callback;
+    }
   }
 
   callbackParams() {
-    if (isPresent(this.selector) && this.bubble) {
-      return [this.event, this.selector, this.callback];
-    } else {
-      return [this.event, this.callback];
-    }
+    return [this.event, this.callback];
   }
 
   getRoot() {
     switch (this.root) {
     case 'window':
-      return $(window);
+      return window;
     case 'document':
-      return $(document);
+      return document;
     case 'body':
-      return $('body');
+      return document.querySelector('body');
     default:
-      return this.component.$();
+      return this.component.element;
     }
   }
 
   getSelector() {
     if (isPresent(this.selector) && !this.bubble) {
-      return this.getRoot().find(this.selector);
+      return this.getRoot().querySelector(this.selector);
     } else {
       return this.getRoot();
     }
@@ -52,11 +59,11 @@ export default class HandlerProperty {
 
   on() {
     this.handling = true;
-    this.getSelector().on(...this.callbackParams());
+    this.getSelector().addEventListener(...this.callbackParams());
   }
 
   off() {
-    this.getSelector().off(...this.callbackParams());
+    this.getSelector().removeEventListener(...this.callbackParams());
     this.handling = false;
   }
 }

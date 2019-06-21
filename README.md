@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/AutoCloud/ember-cli-event-handlers.svg?branch=master)](https://travis-ci.org/AutoCloud/ember-cli-event-handlers)
 [![Ember Observer Score](https://emberobserver.com/badges/ember-cli-event-handlers.svg)](https://emberobserver.com/addons/ember-cli-event-handlers)
 
-This tiny addon introduces a syntactic sugar for handling external ([jQuery](http://jquery.com/)) events in components.
+This tiny addon introduces a syntactic sugar for handling external events in components.
 
 You can create an event handler using the provided `handle` or `handleManual` descriptors similar to the computed property descriptors; the handler will be attached to the selected element on `didInsertElement` and will be detached on `willDestroyElement`. As long as Ember destroys an element after destroying a component, your handler will stop reacting once the component becomes unavailable. It's done by monitoring `isDestroying`/`isDestroyed` properties of the component.
 
@@ -28,9 +28,9 @@ Basically, this addon defines a new property descriptor `handle` that can be use
 
 where:
 
-`event` is one of the [event names supported by jQuery](https://api.jquery.com/category/events/), such as `'click'`, `'mouseover'`, etc.
+`event` is one of the DOM event names, such as `'click'`, `'mouseover'`, etc.
 
-`rootElement`: `'component'` (used by default if this argument is omitted), `'window'`, or `'body'`.
+`rootElement`: `'component'` (used by default if this argument is omitted), `'document`', `'window'`, or `'body'`.
 
 `selector`: a string defining the element to which the handler is attached (within the specified root element).
 

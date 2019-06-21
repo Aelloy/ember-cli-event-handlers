@@ -1,3 +1,7 @@
+# 0.0.6
+
+Removed jQuery in favour of the native JS event listeners to support the modern Ember trends.
+
 # 0.0.5
 
 * Added 'document' keyword as event target, useful for tracking `visibilitychange` event for example

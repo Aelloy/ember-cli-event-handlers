@@ -25,13 +25,10 @@ test('properly scopes callback', function(assert) {
 });
 
 test('callbackParams generation', function(assert) {
-  assert.expect(3);
+  assert.expect(2);
 
   var prop = new HandlerProperty(handle('event', noop));
   assert.equal(prop.callbackParams().length, 2, "put two params into array");
-
-  prop = new HandlerProperty(handle('event', '.button', noop));
-  assert.equal(prop.callbackParams().length, 3, "put three params into array");
 
   prop = new HandlerProperty(handle('scroll', '.scrollable', noop));
   assert.notOk(prop.bubble, "Bubbling disabled")
@@ -42,11 +39,11 @@ test('on/off methods', function(assert) {
   var prop = new HandlerProperty(handle('event', noop));
   prop.getSelector = function() {
     return {
-      on(event, cb) {
+      addEventListener(event, cb) {
         assert.equal(event, 'event', "event passed on 'on'");
         assert.equal(cb, prop.callback, "callback passed on 'on'");
       },
-      off(event, cb) {
+      removeEventListener(event, cb) {
         assert.equal(event, 'event', "event passed on 'off'");
         assert.equal(cb, prop.callback, "callback passed on 'off'");
       }

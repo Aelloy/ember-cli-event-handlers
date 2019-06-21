@@ -25,10 +25,10 @@ test('event handlers hooked up and hooked off', function(assert) {
   subject.prop.getSelector = function() {
     var handler = this;
     return {
-      on() {
+      addEventListener() {
         assert.equal(handler.event, 'resize', "Event passed on didInsert");
       },
-      off() {
+      removeEventListener() {
         assert.equal(handler.event, 'resize', "Event passed on willDestroy");
       }
     };
