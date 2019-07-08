@@ -4,7 +4,7 @@ import EventHandlersMixin from 'ember-cli-event-handlers/mixins/event-handlers';
 
 export default {
   name: 'ember-cli-event-handlers',
-  initialize: function(registry) {
+  initialize: function() {
     const config = ENV['ember-cli-event-handlers'] || {};
 
     if (config.autoApply) {
