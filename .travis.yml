@@ -1,7 +1,7 @@
 ---
 language: node_js
 node_js:
-  - "4"
+  - "8"
 
 sudo: false
 dist: trusty
@@ -13,13 +13,19 @@ cache:
   directories:
     - $HOME/.npm
 
+branches:
+  only:
+    - master
+    # npm version tags
+    - /^v\d+\.\d+\.\d+/
+
 env:
-  - EMBER_TRY_SCENARIO=ember-lts-2.8
-  - EMBER_TRY_SCENARIO=ember-lts-2.12
+  - EMBER_TRY_SCENARIO=ember-lts-2.18
+  - EMBER_TRY_SCENARIO=ember-lts-3.4
   - EMBER_TRY_SCENARIO=ember-release
   - EMBER_TRY_SCENARIO=ember-beta
   - EMBER_TRY_SCENARIO=ember-canary
-  - EMBER_TRY_SCENARIO=ember-default
+  - EMBER_TRY_SCENARIO=ember-default-with-jquery
 
 matrix:
   fast_finish: true
@@ -28,7 +34,7 @@ matrix:
 
 before_install:
   - npm config set spin false
-  - npm install -g npm@4
+  - npm install -g npm@8
   - npm --version
 
 script:
